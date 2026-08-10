@@ -10,12 +10,13 @@ The project will progressively move from research and planning to AI/ML implemen
 
 ## 🔗 Existing Application
 
-- Website: https://hisabdo.app/
-- Mobile Application: https://play.google.com/store/apps/details?id=com.usman.hisabdo
+- Website: [https://hisabdo.app/](https://hisabdo.app/)
+- Mobile Application: [https://play.google.com/store/apps/details?id=com.usman.hisabdo](https://play.google.com/store/apps/details?id=com.usman.hisabdo)
 
 ## 🎯 Project Objective
 
 The main objective is to explore how AI and ML can improve:
+
 - Financial record management
 - Expense tracking
 - Customer management
@@ -30,6 +31,7 @@ The project focuses on enhancing existing HisabDo functionality rather than crea
 ## 🔍 Product Analysis
 
 The existing HisabDo application provides functionality related to:
+
 - Khata / Ledger
 - Customer management
 - Transactions
@@ -60,6 +62,7 @@ The analysis identified several opportunities for adding an AI intelligence laye
 ### 1. AI Receipt Scanner & Smart Expense Processing
 
 The system will allow users to capture a receipt and automatically extract:
+
 - Merchant
 - Date
 - Amount
@@ -67,6 +70,7 @@ The system will allow users to capture a receipt and automatically extract:
 - Expense category
 
 Possible technologies:
+
 - OCR
 - Computer Vision
 - NLP
@@ -77,12 +81,14 @@ Possible technologies:
 The AI assistant will allow users to ask questions about their financial information using natural language.
 
 Examples:
+
 - "How much did I spend this month?"
 - "Who owes me the most money?"
 - "What was my biggest expense?"
 - "How much did I spend on transport?"
 
 Possible technologies:
+
 - LLM
 - NLP
 - Structured data retrieval
@@ -111,7 +117,7 @@ Expense Categorization
 User Confirmation
   ↓
 HisabDo Expense Record
-```
+````
 
 ### AI Financial Assistant
 
@@ -133,6 +139,95 @@ AI Response
 User
 ```
 
+## 🚀 Day 9 — AI Receipt Scanner POC
+
+The primary AI feature selected for implementation is:
+
+**AI Receipt Scanner & Smart Expense Processing**
+
+A working proof-of-concept was developed using **FastAPI and EasyOCR**.
+
+### 🔄 POC Workflow
+
+```text
+Receipt Image
+      ↓
+FastAPI Upload
+      ↓
+EasyOCR
+      ↓
+Text Extraction
+      ↓
+Total Amount Extraction
+      ↓
+Expense Categorization
+      ↓
+JSON Response
+```
+
+### 🛠️ Technology Used
+
+* Python
+* FastAPI
+* EasyOCR
+* Regular Expressions
+* Rule-based Expense Categorization
+* Swagger UI
+
+### 📥 Input
+
+The API accepts a receipt image through:
+
+```text
+POST /scan-receipt
+```
+
+### 📤 Output
+
+The API returns:
+
+* Filename
+* Extracted receipt text
+* Total amount
+* Expense category
+
+Example:
+
+```json
+{
+  "filename": "recpit.jpg",
+  "amount": 84.8,
+  "category": "Other"
+}
+```
+
+### 🧪 POC Test Result
+
+The receipt scanner was successfully tested using FastAPI Swagger UI.
+
+The system successfully:
+
+* Accepted the receipt image
+* Extracted text using EasyOCR
+* Identified the total amount as `84.8`
+* Generated an expense category
+
+### 📸 POC Screenshot
+
+The following screenshot shows the successful testing of the AI Receipt Scanner API using FastAPI Swagger UI.
+
+![AI Receipt Scanner POC](./screenshots/receipt-scanner-result.png)
+
+### 🔮 Integration Plan
+
+The POC can later be integrated into:
+
+* **Website:** Receipt upload interface connected to the AI API
+* **Web Application:** Expense entry form with automatic receipt processing
+* **Mobile Application:** Camera-based receipt capture connected to the backend API
+
+> This is currently a proof-of-concept. Advanced ML categorization, improved information extraction, application integration, testing, and deployment will be developed in later stages.
+
 ## 👥 User Feedback
 
 Five users were asked to explore the HisabDo application and provide feedback about usability, useful features, difficult workflows, and potential AI improvements.
@@ -146,42 +241,67 @@ hisabdo-ai-capstone/
 │
 ├── README.md
 │
-└── docs/
-    ├── AI-USE-CASE-DOCUMENT.md
-    ├── FEATURE-ANALYSIS.md
-    ├── USER-FEEDBACK.md
-    └── ARCHITECTURE.md
+├── docs/
+│   ├── AI-USE-CASE-DOCUMENT.md
+│   ├── FEATURE-ANALYSIS.md
+│   ├── USER-FEEDBACK.md
+│   ├── ARCHITECTURE.md
+│   └── DAY-9-FEATURE-SPECIFICATION.md
+│
+├── poc/
+│   └── receipt-scanner/
+│       ├── app.py
+│       ├── requirements.txt
+│       └── README.md
+│
+└── screenshots/
+    └── receipt-scanner-result.png
 ```
 
 ## 🚧 Project Status
 
 ### Day 8 — Research & Planning
 
-- [x] HisabDo website research
-- [x] HisabDo mobile application research
-- [x] Existing feature analysis
-- [x] AI/ML opportunity identification
-- [x] AI use cases identified
-- [x] Top 2 features selected
-- [x] Initial technical architecture prepared
-- [x] Five-user feedback collected
-- [ ] AI prototype
-- [ ] Dataset preparation
-- [ ] ML model development
-- [ ] Backend/API development
-- [ ] Application integration
-- [ ] Testing
-- [ ] Deployment
+* [x] HisabDo website research
+* [x] HisabDo mobile application research
+* [x] Existing feature analysis
+* [x] AI/ML opportunity identification
+* [x] AI use cases identified
+* [x] Top 2 features selected
+* [x] Initial technical architecture prepared
+* [x] Five-user feedback collected
+
+### Day 9 — AI Feature Implementation
+
+* [x] Primary AI feature selected
+* [x] Feature workflow defined
+* [x] Input and output identified
+* [x] AI/OCR technology researched
+* [x] Architecture defined
+* [x] AI prototype developed
+* [x] FastAPI backend/API developed
+* [x] EasyOCR integrated
+* [x] Receipt image tested
+* [x] Total amount extraction implemented
+* [x] Expense categorization implemented
+* [x] API tested using Swagger UI
+* [x] POC screenshot captured
+* [x] Website/Web/Mobile integration plan defined
+* [ ] Production application integration
+* [ ] Advanced ML-based categorization
+* [ ] Testing and evaluation
+* [ ] Deployment
 
 ## 🔮 Future Development
 
 The project will continue throughout the internship from Day 8 to Day 60.
 
 Future stages will include:
+
 1. Data collection
 2. Data preprocessing
 3. AI/ML model development
-4. OCR implementation
+4. OCR improvement
 5. Expense classification
 6. Financial assistant development
 7. API development
@@ -195,15 +315,22 @@ Future stages will include:
 The research indicates that HisabDo already provides a strong financial-management foundation.
 
 The proposed AI features aim to enhance existing workflows through:
-- Automation
-- Natural-language interaction
-- Intelligent categorization
-- Personalized insights
-- Prediction
-- Recommendation
+
+* Automation
+* Natural-language interaction
+* Intelligent categorization
+* Personalized insights
+* Prediction
+* Recommendation
 
 The selected Top 2 features are:
+
 1. AI Receipt Scanner & Smart Expense Processing
 2. AI Financial Assistant
 
-These features will be progressively developed during the remaining internship period.
+The Day 9 proof-of-concept demonstrates the initial implementation of the AI Receipt Scanner using FastAPI and EasyOCR.
+
+The project will continue to evolve through the remaining internship stages with improved AI models, application integration, testing, and deployment.
+
+```
+```
