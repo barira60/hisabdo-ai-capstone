@@ -216,7 +216,7 @@ The system successfully:
 
 The following screenshot shows the successful testing of the AI Receipt Scanner API using FastAPI Swagger UI.
 
-![AI Receipt Scanner POC](./screenshots/receipt-scanner-result.png)
+![AI Receipt Scanner POC](./screenshots/receipt-scanner-result.PNG)
 
 ### 🔮 Integration Plan
 
