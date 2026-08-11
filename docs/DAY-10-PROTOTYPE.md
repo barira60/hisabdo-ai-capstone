@@ -1,4 +1,4 @@
-````md
+
 # 🚀 Day 10 — AI Receipt Scanner Prototype
 
 ## 1. Day 10 Objective
