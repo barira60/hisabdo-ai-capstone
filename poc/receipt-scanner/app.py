@@ -1,10 +1,12 @@
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.responses import JSONResponse
 import easyocr
 import re
+import os
 
 app = FastAPI(
     title="HisabDo AI Receipt Scanner",
-    description="Day 9 POC for AI-powered receipt scanning",
+    description="Day 10 AI/ML Capstone POC",
     version="1.0.0"
 )
 
@@ -12,99 +14,86 @@ app = FastAPI(
 reader = easyocr.Reader(["en"], gpu=False)
 
 
-def extract_amount(text):
-    """Extract the total amount from receipt text."""
+def extract_amount(text: str):
+    """
+    Extract the receipt total amount from OCR text.
+    """
 
-    lines = text.splitlines()
+    # Look for amounts near words such as Total, Amount, Grand Total
+    patterns = [
+        r"(?:total|amount|grand\s*total|net\s*total)\s*[:\-]?\s*(?:Rs\.?|PKR|\$)?\s*(\d+(?:[.,]\d{1,2})?)",
+        r"(?:Rs\.?|PKR|\$)\s*(\d+(?:[.,]\d{1,2})?)"
+    ]
 
-    # Look specifically for a line containing Total
-    for i, line in enumerate(lines):
-        if "total" in line.lower():
-            # Check the same line
-            match = re.search(r"\d+(?:[.,]\d{1,2})?", line)
+    for pattern in patterns:
+        matches = re.findall(pattern, text, flags=re.IGNORECASE)
 
-            if match:
-                return float(match.group().replace(",", ""))
-
-            # Check the next line
-            if i + 1 < len(lines):
-                match = re.search(
-                    r"\d+(?:[.,]\d{1,2})?",
-                    lines[i + 1]
-                )
-
-                if match:
-                    return float(match.group().replace(",", ""))
-
-    return None
-
-    values = []
-
-    for amount in amounts:
-        try:
-            values.append(float(amount.replace(",", "")))
-        except ValueError:
-            pass
-
-    if values:
-        return max(values)
+        if matches:
+            try:
+                amount = matches[-1].replace(",", "")
+                return float(amount)
+            except ValueError:
+                pass
 
     return None
 
 
-def categorize_expense(text):
-    """Basic rule-based expense categorization."""
+def categorize_expense(text: str):
+    """
+    Basic rule-based expense categorization for the POC.
+    """
 
-    text = text.lower()
+    text_lower = text.lower()
 
-    if any(word in text for word in [
-        "milk",
-        "bread",
-        "grocery",
-        "groceries",
-        "vegetable",
-        "supermarket"
-    ]):
-        return "Groceries"
+    categories = {
+        "Food": [
+            "restaurant",
+            "food",
+            "burger",
+            "pizza",
+            "cafe",
+            "coffee",
+            "grocery",
+            "supermarket",
+            "bakery"
+        ],
+        "Transport": [
+            "uber",
+            "careem",
+            "fuel",
+            "petrol",
+            "diesel",
+            "taxi",
+            "transport"
+        ],
+        "Shopping": [
+            "clothing",
+            "shirt",
+            "shoes",
+            "mall",
+            "shopping",
+            "store"
+        ],
+        "Healthcare": [
+            "pharmacy",
+            "medicine",
+            "hospital",
+            "clinic",
+            "doctor"
+        ],
+        "Utilities": [
+            "electricity",
+            "gas bill",
+            "water bill",
+            "internet",
+            "utility"
+        ]
+    }
 
-    if any(word in text for word in [
-        "restaurant",
-        "pizza",
-        "burger",
-        "biryani",
-        "food",
-        "cafe",
-        "coffee"
-    ]):
-        return "Food"
-
-    if any(word in text for word in [
-        "uber",
-        "careem",
-        "petrol",
-        "fuel",
-        "taxi",
-        "transport"
-    ]):
-        return "Transport"
-
-    if any(word in text for word in [
-        "electricity",
-        "internet",
-        "water bill",
-        "gas bill",
-        "utility"
-    ]):
-        return "Bills"
-
-    if any(word in text for word in [
-        "shirt",
-        "shoes",
-        "clothes",
-        "shopping",
-        "dress"
-    ]):
-        return "Shopping"
+    for category, keywords in categories.items():
+        for keyword in keywords:
+            if keyword in text_lower:
+                return category
 
     return "Other"
 
@@ -113,34 +102,78 @@ def categorize_expense(text):
 def home():
     return {
         "message": "HisabDo AI Receipt Scanner is running",
-        "status": "success"
+        "status": "success",
+        "version": "Day 10 POC"
+    }
+
+
+@app.get("/health")
+def health_check():
+    return {
+        "status": "healthy",
+        "service": "HisabDo AI Receipt Scanner"
     }
 
 
 @app.post("/scan-receipt")
 async def scan_receipt(file: UploadFile = File(...)):
 
-    # Read uploaded receipt as bytes
-    image_bytes = await file.read()
+    # Validate file type
+    allowed_types = [
+        "image/jpeg",
+        "image/png",
+        "image/jpg"
+    ]
 
-    # Send bytes directly to EasyOCR
-    results = reader.readtext(
-        image_bytes,
-        detail=0
-    )
+    if file.content_type not in allowed_types:
+        raise HTTPException(
+            status_code=400,
+            detail="Please upload a JPG, JPEG, or PNG image."
+        )
 
-    # Combine OCR results
-    extracted_text = "\n".join(results)
+    try:
+        # Read uploaded image
+        image_bytes = await file.read()
 
-    # Extract total amount
-    amount = extract_amount(extracted_text)
+        # Save temporarily
+        temp_file = "temp_receipt.jpg"
 
-    # Categorize expense
-    category = categorize_expense(extracted_text)
+        with open(temp_file, "wb") as f:
+            f.write(image_bytes)
 
-    return {
-        "filename": file.filename,
-        "extracted_text": extracted_text,
-        "amount": amount,
-        "category": category
-    }
+        # OCR
+        results = reader.readtext(temp_file)
+
+        # Combine OCR text
+        extracted_text = "\n".join(
+            result[1] for result in results
+        )
+
+        # Extract amount
+        amount = extract_amount(extracted_text)
+
+        # Categorize expense
+        category = categorize_expense(extracted_text)
+
+        # Delete temporary file
+        if os.path.exists(temp_file):
+            os.remove(temp_file)
+
+        return JSONResponse(
+            content={
+                "filename": file.filename,
+                "extracted_text": extracted_text,
+                "amount": amount,
+                "category": category
+            }
+        )
+
+    except Exception as e:
+
+        if os.path.exists("temp_receipt.jpg"):
+            os.remove("temp_receipt.jpg")
+
+        raise HTTPException(
+            status_code=500,
+            detail=f"Receipt processing failed: {str(e)}"
+        )
