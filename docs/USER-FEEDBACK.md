@@ -22,15 +22,26 @@ The feedback focused on:
 
 ## 3. User Feedback Results
 
-| User | Easy to Use? | Most Useful Feature | Main Difficulty | Preferred AI Feature | Suggested Improvement |
-|---|---|---|---|---|---|
-| User 1 | Yes | Khata | Entering expenses | Receipt Scanner | Make expense entry easier |
-| User 2 | Yes | Dashboard | Finding information | AI Financial Assistant | Add an AI assistant |
-| User 3 | Yes | Expenses | Categorizing expenses | Automatic Expense Categorization | Automatically categorize expenses |
-| User 4 | Yes | Reports | Understanding reports | Financial Insights | Make reports easier to understand |
-| User 5 | Yes | Customer/Khata | Remembering customer payments | Smart Reminders | Add payment reminders |
+| User | Easy to Use? | Most Useful Feature | Main Difficulty | Preferred AI Feature | Feedback / Suggestions | Issues Found |
+|---|---|---|---|---|---|---|
+| User 1 (A.K.) | Yes | Khata / Transactions | Entering expenses | Receipt Scanner | Found the Khata and transaction features easy to use. Suggested adding automatic expense categorization. | Entering expenses manually can take time. |
+| User 2 (S.R.) | Yes | Dashboard / Reports | Finding information | AI Financial Assistant | Liked the dashboard and reports. Suggested better visual charts for monthly expenses. | Some financial information requires several steps to find. |
+| User 3 (M.H.) | Yes | Expenses / Voice Entry | Categorizing expenses | Automatic Expense Categorization | Found the voice entry feature useful. Suggested improving voice recognition for different accents. | Voice input may require corrections sometimes. |
+| User 4 (F.K.) | Yes | Customer / Khata Management | Understanding reports | Financial Insights | Liked the customer/ledger management. Suggested automatic payment reminders. | Tracking pending payments manually can be inconvenient. |
+| User 5 (Z.A.) | Yes | Customer / Khata | Understanding spending | AI Financial Assistant | Suggested adding an AI assistant that can answer questions about spending. | Users may need to navigate through reports to understand spending patterns. | 
 
-## 4. Key Findings
+
+## 4. Recommended Improvements
+
+Based on the user feedback, the following improvements are recommended:
+
+1. Add automatic expense categorization.
+2. Improve monthly expense visualizations.
+3. Improve voice-entry accuracy.
+4. Add automatic payment reminders.
+5. Introduce an AI financial assistant.
+
+## 5. Key Findings
 
 ### Finding 1 — Users Generally Found the App Easy to Use
 
@@ -90,7 +101,7 @@ The system could provide:
 - Suggested reminder timing
 - Priority customers
 
-## 5. AI Opportunities Identified From User Feedback
+## 6. AI Opportunities Identified From User Feedback
 
 | User Problem | AI Solution |
 |---|---|
@@ -100,7 +111,7 @@ The system could provide:
 | Difficulty understanding reports | AI Financial Insights |
 | Remembering customer payments | Smart Payment Reminders |
 
-## 6. User Feedback vs Proposed AI Features
+## 7. User Feedback vs Proposed AI Features
 
 The feedback supports several of the AI ideas identified during product analysis.
 
@@ -121,7 +132,7 @@ Directly supported by User 5.
 
 This provides evidence that the proposed AI features address actual user concerns rather than being selected only as theoretical possibilities.
 
-## 7. Updated AI Feature Prioritization
+## 8. Updated AI Feature Prioritization
 
 | Priority | AI Feature | Reason |
 |---|---|---|
@@ -132,7 +143,7 @@ This provides evidence that the proposed AI features address actual user concern
 | 5 | Predictive Expense Analytics | Provides future spending predictions |
 | 6 | Smart Budget Recommendations | Provides personalized budgeting |
 
-## 8. Final Top 2 Selection
+## 9. Final Top 2 Selection
 
 ### 1. AI Receipt Scanner & Smart Expense Processing
 
@@ -153,7 +164,7 @@ Examples:
 - "How much did I spend this month?"
 - "What was my biggest expense?"
 
-## 9. Additional Future AI Features
+## 10. Additional Future AI Features
 
 The feedback also supports:
 - AI Financial Insights, based on User 4
@@ -161,7 +172,7 @@ The feedback also supports:
 
 These can be considered for later phases of the Day 8–Day 60 capstone.
 
-## 10. Conclusion
+## 11. Conclusion
 
 The five-user feedback activity provided practical evidence for the AI/ML opportunities identified during the HisabDo product analysis.
 

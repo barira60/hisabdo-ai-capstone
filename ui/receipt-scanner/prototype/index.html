@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HisabDo AI Receipt Scanner</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f5f7fb;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 850px;
+      margin: auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      font-size: 32px;
+      color: #1f2937;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      color: #6b7280;
+      font-size: 16px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 20px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .upload-area {
+      border: 2px dashed #9ca3af;
+      border-radius: 12px;
+      padding: 45px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .upload-area:hover {
+      border-color: #2563eb;
+      background: #f8fbff;
+    }
+
+    .upload-icon {
+      font-size: 45px;
+      margin-bottom: 12px;
+    }
+
+    .upload-area h3 {
+      color: #374151;
+      margin-bottom: 8px;
+    }
+
+    .upload-area p {
+      color: #6b7280;
+      font-size: 14px;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    .file-name {
+      margin-top: 15px;
+      color: #2563eb;
+      font-weight: bold;
+    }
+
+    .scan-button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background: #2563eb;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .scan-button:hover {
+      background: #1d4ed8;
+    }
+
+    .scan-button:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+
+    .processing {
+      display: none;
+      text-align: center;
+      padding: 25px;
+      color: #2563eb;
+      font-weight: bold;
+    }
+
+    .result {
+      display: none;
+    }
+
+    .result h2 {
+      margin-bottom: 20px;
+      color: #1f2937;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .result-box {
+      background: #f8fafc;
+      padding: 18px;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .result-box span {
+      display: block;
+      color: #6b7280;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .result-box strong {
+      font-size: 20px;
+      color: #111827;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .actions button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .confirm {
+      border: none;
+      background: #16a34a;
+      color: white;
+    }
+
+    .edit {
+      border: 1px solid #d1d5db;
+      background: white;
+      color: #374151;
+    }
+
+    .message {
+      display: none;
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 8px;
+      background: #ecfdf5;
+      color: #166534;
+      text-align: center;
+    }
+
+    .workflow {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .step {
+      flex: 1;
+      min-width: 110px;
+      text-align: center;
+      padding: 15px 8px;
+      background: #f8fafc;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      font-size: 13px;
+      color: #374151;
+    }
+
+    .arrow {
+      color: #9ca3af;
+      font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+      .result-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .arrow {
+        display: none;
+      }
+
+      .step {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="header">
+      <h1>🧾 HisabDo AI Receipt Scanner</h1>
+      <p>Automatically extract and categorize your receipt information</p>
+    </div>
+
+    <div class="card">
+
+      <div class="upload-area" onclick="document.getElementById('receiptInput').click()">
+        <div class="upload-icon">📷</div>
+
+        <h3>Upload Receipt</h3>
+
+        <p>
+          Click to select a JPG, JPEG or PNG receipt
+        </p>
+
+        <input
+          type="file"
+          id="receiptInput"
+          accept=".jpg,.jpeg,.png"
+          onchange="showFileName()"
+        />
+
+        <div class="file-name" id="fileName"></div>
+      </div>
+
+      <button
+        class="scan-button"
+        id="scanButton"
+        onclick="scanReceipt()"
+        disabled
+      >
+        Scan Receipt
+      </button>
+
+      <div class="processing" id="processing">
+        🔄 Processing receipt with AI...
+      </div>
+
+    </div>
+
+    <div class="card result" id="result">
+
+      <h2>📊 Extracted Information</h2>
+
+      <div class="result-grid">
+
+        <div class="result-box">
+          <span>Receipt</span>
+          <strong id="resultFile">restaurant-receipt.png</strong>
+        </div>
+
+        <div class="result-box">
+          <span>Amount</span>
+          <strong id="resultAmount">51.30</strong>
+        </div>
+
+        <div class="result-box">
+          <span>Category</span>
+          <strong id="resultCategory">Food</strong>
+        </div>
+
+        <div class="result-box">
+          <span>Status</span>
+          <strong>Validated ✓</strong>
+        </div>
+
+      </div>
+
+      <div class="actions">
+        <button class="confirm" onclick="confirmExpense()">
+          ✓ Confirm & Save
+        </button>
+
+        <button class="edit" onclick="editExpense()">
+          ✎ Edit Information
+        </button>
+      </div>
+
+      <div class="message" id="message">
+        Expense confirmed successfully!
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <h2 style="margin-bottom: 20px;">
+        🔄 AI Integration Workflow
+      </h2>
+
+      <div class="workflow">
+
+        <div class="step">
+          📷<br />
+          Upload Receipt
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="step">
+          ⚙️<br />
+          FastAPI
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="step">
+          🤖<br />
+          EasyOCR
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="step">
+          ✅<br />
+          Validation
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div class="step">
+          💰<br />
+          Save Expense
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    function showFileName() {
+
+      const input = document.getElementById("receiptInput");
+      const fileName = document.getElementById("fileName");
+      const scanButton = document.getElementById("scanButton");
+
+      if (input.files.length > 0) {
+        fileName.textContent = "Selected: " + input.files[0].name;
+        scanButton.disabled = false;
+      }
+    }
+
+    function scanReceipt() {
+
+      const processing = document.getElementById("processing");
+      const result = document.getElementById("result");
+
+      processing.style.display = "block";
+      result.style.display = "none";
+
+      setTimeout(() => {
+
+        processing.style.display = "none";
+        result.style.display = "block";
+
+        const input = document.getElementById("receiptInput");
+
+        if (input.files.length > 0) {
+          document.getElementById("resultFile").textContent =
+            input.files[0].name;
+        }
+
+      }, 1500);
+    }
+
+    function confirmExpense() {
+
+      document.getElementById("message").style.display = "block";
+    }
+
+    function editExpense() {
+
+      alert("Edit mode can be connected to the HisabDo expense form.");
+    }
+
+  </script>
+
+</body>
+</html>
